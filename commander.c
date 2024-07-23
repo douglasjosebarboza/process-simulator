@@ -36,6 +36,9 @@ void handler(int sig) {
 int main() {
     pid_t pid;
     int i = 0;
+    sem_unlink("/empty_sem");
+    sem_unlink("/full_sem");
+    sem_unlink("/mutex_sem");
 
     empty = sem_open("/empty_sem", O_CREAT | O_EXCL, 0644, 1);
     full = sem_open("/full_sem", O_CREAT | O_EXCL, 0644, 0);
