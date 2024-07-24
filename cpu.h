@@ -6,14 +6,14 @@
 
 typedef struct
 {
-  Processo* processo;
-  int       tempoEntrada;
-  size_t    contadorProgramaAtual;
+  Processo *processo;
+  int tempoEntrada;
+  size_t contadorProgramaAtual;
 } CPU;
 
-void cpuDesaloca(CPU* objeto);
+void cpuDesaloca(CPU *objeto);
 
-#endif //CPU_H
+#endif // CPU_H
 
 /*
 Possui os seguintes dados:

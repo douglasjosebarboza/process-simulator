@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <semaphore.h>
 #include <string.h>
-#include <signal.h> 
+#include <signal.h>
 #include "processomanager.h"
 #include "listaint.h"
 #include "entradapcb.h"
@@ -19,7 +19,8 @@ sem_t *empty;
 sem_t *full;
 sem_t *mutex;
 
-void handler(int sig) {
+void handler(int sig)
+{
     sem_close(empty);
     sem_close(full);
     sem_close(mutex);
@@ -33,7 +34,8 @@ void handler(int sig) {
     exit(EXIT_SUCCESS);
 }
 
-int main() {
+int main()
+{
     pid_t pid;
     int i = 0;
     sem_unlink("/empty_sem");
@@ -44,24 +46,28 @@ int main() {
     full = sem_open("/full_sem", O_CREAT | O_EXCL, 0644, 0);
     mutex = sem_open("/mutex_sem", O_CREAT | O_EXCL, 0644, 1);
 
-    if (empty == SEM_FAILED || full == SEM_FAILED || mutex == SEM_FAILED) {
+    if (empty == SEM_FAILED || full == SEM_FAILED || mutex == SEM_FAILED)
+    {
         perror("sem_open");
         exit(EXIT_FAILURE);
     }
 
-    if (pipe(pipefd) == -1) {
+    if (pipe(pipefd) == -1)
+    {
         perror("pipe");
         exit(EXIT_FAILURE);
     }
 
     pid = fork();
 
-    if (pid == -1) {
+    if (pid == -1)
+    {
         perror("fork");
         exit(EXIT_FAILURE);
     }
 
-    if (pid == 0) {
+    if (pid == 0)
+    {
         ProcessoManager *pm = prcsmngInit();
         char buffer[1];
         int retornoExec = PRCSMNG_SUCESSO_EXECUCAO;
@@ -77,12 +83,15 @@ int main() {
             sem_post(empty);
         }
         prcsmngDesaloca(pm);
-        if(retornoExec == PRCSMNG_CODIGO_SAIDA){
+        if (retornoExec == PRCSMNG_CODIGO_SAIDA)
+        {
             printf("PROGRAMA TERMINADO COM SUCESSO\n");
         }
         exit(EXIT_SUCCESS);
-    } else {
-        signal(SIGCHLD, handler); 
+    }
+    else
+    {
+        signal(SIGCHLD, handler);
         while (true)
         {
             sem_wait(empty);
@@ -91,7 +100,7 @@ int main() {
 
             printf("Digite um caractere: ");
             scanf(" %c", &character);
-            if(character >= 'a' || character <= 'z')
+            if (character >= 'a' || character <= 'z')
             {
                 character = character - 32;
             }

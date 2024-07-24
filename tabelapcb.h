@@ -4,19 +4,20 @@
 #include "entradapcb.h"
 #include <stdbool.h>
 
-typedef struct {
-    EntradaPCB** ponteiro;
-    size_t capacidade;
-    size_t quantidade;
+typedef struct
+{
+  EntradaPCB **ponteiro;
+  size_t capacidade;
+  size_t quantidade;
 } TabelaPCB;
 
-TabelaPCB* pcbInit(); 
-bool pcbInsere(TabelaPCB* tabela, EntradaPCB* entrada_tomaPosse);
-bool pcbRemove(TabelaPCB* tabela, size_t indice);
-EntradaPCB* pcbAcessa(TabelaPCB* tabela, size_t indice);
-void pcbDesaloca(TabelaPCB* tabela);
+TabelaPCB *pcbInit();
+bool pcbInsere(TabelaPCB *tabela, EntradaPCB *entrada_tomaPosse);
+bool pcbRemove(TabelaPCB *tabela, size_t indice);
+EntradaPCB *pcbAcessa(TabelaPCB *tabela, size_t indice);
+void pcbDesaloca(TabelaPCB *tabela);
 
-#endif //TABELAPCB_H
+#endif // TABELAPCB_H
 
 /*
 Possui os seguintes dados:

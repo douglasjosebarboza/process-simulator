@@ -28,8 +28,8 @@ static char *leTudo(FILE *arquivo)
     lintDesaloca(lista);
     return NULL;
   }
-  char* buffer = malloc(lista->quantidade);
-  if(buffer == NULL)
+  char *buffer = malloc(lista->quantidade);
+  if (buffer == NULL)
   {
     lintDesaloca(lista);
     return NULL;
@@ -52,21 +52,21 @@ static char *leTudo(FILE *arquivo)
 
 ProcessoManager *prcsmngInit()
 {
-  ProcessoManager* objeto = malloc(sizeof(ProcessoManager));
-  if(objeto == NULL)
+  ProcessoManager *objeto = malloc(sizeof(ProcessoManager));
+  if (objeto == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar memoria para o gerenciador de processos\n");
     return NULL;
   }
   objeto->tabelaPCB = pcbInit();
-  if(objeto->tabelaPCB == NULL)
+  if (objeto->tabelaPCB == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar memoria para o gerenciador de processos\n");
     free(objeto);
     return NULL;
   }
   objeto->estadoPronto = lintInit();
-  if(objeto->estadoPronto == NULL)
+  if (objeto->estadoPronto == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -74,7 +74,7 @@ ProcessoManager *prcsmngInit()
     return NULL;
   }
   objeto->estadoBloqueado = lintInit();
-  if(objeto->estadoBloqueado == NULL)
+  if (objeto->estadoBloqueado == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -82,11 +82,11 @@ ProcessoManager *prcsmngInit()
     free(objeto);
     return NULL;
   }
-  objeto->tempo             = 0;
-  objeto->proximoId         = 1;
-  objeto->estadoExecutando  = 0;
+  objeto->tempo = 0;
+  objeto->proximoId = 1;
+  objeto->estadoExecutando = 0;
   objeto->CPU = malloc(sizeof(CPU));
-  if(objeto->CPU == NULL)
+  if (objeto->CPU == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -95,8 +95,8 @@ ProcessoManager *prcsmngInit()
     free(objeto);
     return NULL;
   }
-  FILE* arquivoInit = fopen("init", "r");
-  if(arquivoInit == NULL)
+  FILE *arquivoInit = fopen("init", "r");
+  if (arquivoInit == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao abrir o arquivo \"init\"\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -106,8 +106,8 @@ ProcessoManager *prcsmngInit()
     free(objeto);
     return NULL;
   }
-  char* stringInit = leTudo(arquivoInit);
-  if(stringInit == NULL)
+  char *stringInit = leTudo(arquivoInit);
+  if (stringInit == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -118,8 +118,8 @@ ProcessoManager *prcsmngInit()
     fclose(arquivoInit);
     return NULL;
   }
-  Processo* processo0 = prcsInit(stringInit);
-  if(processo0 == NULL)
+  Processo *processo0 = prcsInit(stringInit);
+  if (processo0 == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -131,8 +131,8 @@ ProcessoManager *prcsmngInit()
     free(stringInit);
     return NULL;
   }
-  EntradaPCB* entrada0 = epcbInit(processo0, 0, 0);
-  if(entrada0 == NULL)
+  EntradaPCB *entrada0 = epcbInit(processo0, 0, 0);
+  if (entrada0 == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
     pcbDesaloca(objeto->tabelaPCB);
@@ -157,35 +157,35 @@ ProcessoManager *prcsmngInit()
   return objeto;
 }
 
-static size_t prcsmngEscalonador(ProcessoManager* objeto)
+static size_t prcsmngEscalonador(ProcessoManager *objeto)
 {
   srand(time(NULL));
   return ((size_t)rand()) % objeto->estadoPronto->quantidade;
 }
 
-bool prcsmngTrocaContexto(ProcessoManager* objeto)
+bool prcsmngTrocaContexto(ProcessoManager *objeto)
 {
   if (objeto->estadoPronto->quantidade == 0)
     return false;
-  CPU* cpu                      = objeto->CPU;
-  EntradaPCB* executandoAntigo  = pcbAcessa(objeto->tabelaPCB, objeto->estadoExecutando);
-  if(executandoAntigo == NULL)
+  CPU *cpu = objeto->CPU;
+  EntradaPCB *executandoAntigo = pcbAcessa(objeto->tabelaPCB, objeto->estadoExecutando);
+  if (executandoAntigo == NULL)
     return false;
-  executandoAntigo->contadorPrograma  = cpu->contadorProgramaAtual;
-  executandoAntigo->usoCPU            += objeto->tempo - cpu->tempoEntrada;
-  if(lintInsere(objeto->estadoBloqueado, objeto->estadoExecutando) == false)
+  executandoAntigo->contadorPrograma = cpu->contadorProgramaAtual;
+  executandoAntigo->usoCPU += objeto->tempo - cpu->tempoEntrada;
+  if (lintInsere(objeto->estadoBloqueado, objeto->estadoExecutando) == false)
     return false;
   size_t indiceNoEstadoPronto = prcsmngEscalonador(objeto);
-  if(lintAcessa(objeto->estadoPronto, indiceNoEstadoPronto) == NULL)
+  if (lintAcessa(objeto->estadoPronto, indiceNoEstadoPronto) == NULL)
     return false;
   size_t novoIndicePCB = *lintAcessa(objeto->estadoPronto, indiceNoEstadoPronto);
-  if(pcbAcessa(objeto->tabelaPCB, novoIndicePCB) == NULL)
+  if (pcbAcessa(objeto->tabelaPCB, novoIndicePCB) == NULL)
     return NULL;
-  cpu->contadorProgramaAtual  = pcbAcessa(objeto->tabelaPCB, novoIndicePCB)->contadorPrograma;
-  cpu->processo               = pcbAcessa(objeto->tabelaPCB, novoIndicePCB)->processo;
-  cpu->tempoEntrada           = objeto->tempo;
-  objeto->estadoExecutando    = novoIndicePCB;
-  if(lintRemove(objeto->estadoPronto, indiceNoEstadoPronto) == false)
+  cpu->contadorProgramaAtual = pcbAcessa(objeto->tabelaPCB, novoIndicePCB)->contadorPrograma;
+  cpu->processo = pcbAcessa(objeto->tabelaPCB, novoIndicePCB)->processo;
+  cpu->tempoEntrada = objeto->tempo;
+  objeto->estadoExecutando = novoIndicePCB;
+  if (lintRemove(objeto->estadoPronto, indiceNoEstadoPronto) == false)
     return false;
   return true;
 }
@@ -207,8 +207,8 @@ static int processaS(ProcessoManager *objeto, char *argumentos)
     printf("FALHA EM EXECUCAO: Argumento nao numerico passado para instrucao S\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
-  objeto->CPU->processo->valor        = atoi(argumentos);
-  objeto->CPU->contadorProgramaAtual  += 1;
+  objeto->CPU->processo->valor = atoi(argumentos);
+  objeto->CPU->contadorProgramaAtual += 1;
   return PRCSMNG_SUCESSO_EXECUCAO;
 }
 
@@ -219,8 +219,8 @@ static int processaA(ProcessoManager *objeto, char *argumentos)
     printf("FALHA EM EXECUCAO: Argumento nao numerico passado para instrucao A\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
-  objeto->CPU->processo->valor        += atoi(argumentos);
-  objeto->CPU->contadorProgramaAtual  += 1;
+  objeto->CPU->processo->valor += atoi(argumentos);
+  objeto->CPU->contadorProgramaAtual += 1;
   return PRCSMNG_SUCESSO_EXECUCAO;
 }
 
@@ -231,8 +231,8 @@ static int processaD(ProcessoManager *objeto, char *argumentos)
     printf("FALHA EM EXECUCAO: Argumento nao numerico passado para instrucao D\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
-  objeto->CPU->processo->valor        -= atoi(argumentos);
-  objeto->CPU->contadorProgramaAtual  += 1;
+  objeto->CPU->processo->valor -= atoi(argumentos);
+  objeto->CPU->contadorProgramaAtual += 1;
   return PRCSMNG_SUCESSO_EXECUCAO;
 }
 
@@ -247,7 +247,7 @@ static int processaB(ProcessoManager *objeto, char *argumentos)
 
 static int processaE(ProcessoManager *objeto, char *argumentos)
 {
-  if(pcbRemove(objeto->tabelaPCB, objeto->estadoExecutando) == false)
+  if (pcbRemove(objeto->tabelaPCB, objeto->estadoExecutando) == false)
   {
     printf("FALHA EM EXECUCAO: Erro ao remover entrada da PCB\n");
     return PRCSMNG_FALHA_EXECUCAO;
@@ -256,30 +256,30 @@ static int processaE(ProcessoManager *objeto, char *argumentos)
     return PRCSMNG_CODIGO_SAIDA;
   else
   {
-    for(size_t i = 0; i < objeto->estadoPronto->quantidade; i += 1)
-      if((*lintAcessa(objeto->estadoPronto, i)) > objeto->estadoExecutando)
+    for (size_t i = 0; i < objeto->estadoPronto->quantidade; i += 1)
+      if ((*lintAcessa(objeto->estadoPronto, i)) > objeto->estadoExecutando)
         *lintAcessa(objeto->estadoPronto, i) -= 1;
-    for(size_t i = 0; i < objeto->estadoBloqueado->quantidade; i += 1)
-      if((*lintAcessa(objeto->estadoBloqueado, i)) > objeto->estadoExecutando)
+    for (size_t i = 0; i < objeto->estadoBloqueado->quantidade; i += 1)
+      if ((*lintAcessa(objeto->estadoBloqueado, i)) > objeto->estadoExecutando)
         *lintAcessa(objeto->estadoBloqueado, i) -= 1;
   }
   size_t indiceNoPronto = prcsmngEscalonador(objeto);
-  if(lintAcessa(objeto->estadoPronto, indiceNoPronto) == NULL)
+  if (lintAcessa(objeto->estadoPronto, indiceNoPronto) == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao acessar lista de estados prontos\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
   size_t indiceNaPCB = *lintAcessa(objeto->estadoPronto, indiceNoPronto);
-  if(pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->processo == NULL)
+  if (pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->processo == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao acessar tabela PCB\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
-  objeto->CPU->processo               = pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->processo;
-  objeto->CPU->tempoEntrada           = objeto->tempo;
-  objeto->CPU->contadorProgramaAtual  = pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->contadorPrograma;
-  objeto->estadoExecutando            = indiceNaPCB;
-  if(lintRemove(objeto->estadoPronto, indiceNoPronto) == false)
+  objeto->CPU->processo = pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->processo;
+  objeto->CPU->tempoEntrada = objeto->tempo;
+  objeto->CPU->contadorProgramaAtual = pcbAcessa(objeto->tabelaPCB, indiceNaPCB)->contadorPrograma;
+  objeto->estadoExecutando = indiceNaPCB;
+  if (lintRemove(objeto->estadoPronto, indiceNoPronto) == false)
   {
     printf("FALHA EM EXECUCAO: Erro ao remover antigo processo da lista de prontos\n");
     return PRCSMNG_FALHA_EXECUCAO;
@@ -294,7 +294,7 @@ static int processaF(ProcessoManager *objeto, char *argumentos)
     printf("FALHA EM EXECUCAO: Argumento nao numerico passado para instrucao F\n");
     return PRCSMNG_FALHA_EXECUCAO;
   }
-  if(prcsmngNovoProcesso(objeto, atoi(argumentos)) == false)
+  if (prcsmngNovoProcesso(objeto, atoi(argumentos)) == false)
   {
     printf("FALHA EM EXECUCAO: Erro ao criar novo processo\n");
     return PRCSMNG_FALHA_EXECUCAO;
@@ -364,21 +364,19 @@ int prcsmngExecuta(ProcessoManager *prcsmng, char argumento)
       printf("FALHA EM EXECUCAO: Tentativa de ler linha invalida de processo.\n");
       return PRCSMNG_FALHA_EXECUCAO;
     }
-    char argumentoProcesso  = linha[0];
-    char* restoLinha        = ((strlen(linha) - 1) > 0) ? linha + 2 : NULL;
-    int retorno             = processaArgumentoProcessoSimulado(prcsmng, argumentoProcesso, restoLinha);
+    char argumentoProcesso = linha[0];
+    char *restoLinha = ((strlen(linha) - 1) > 0) ? linha + 2 : NULL;
+    int retorno = processaArgumentoProcessoSimulado(prcsmng, argumentoProcesso, restoLinha);
     prcsmng->tempo += 1;
     free(linha);
     return retorno;
   }
   else if (argumento == 'U')
   {
-    if
-    (
-      lintAcessa(prcsmng->estadoBloqueado, 0) == NULL ||
-      lintInsere(prcsmng->estadoPronto, *lintAcessa(prcsmng->estadoBloqueado, 0)) == false ||
-      lintRemove(prcsmng->estadoBloqueado, 0) == false
-    )
+    if (
+        lintAcessa(prcsmng->estadoBloqueado, 0) == NULL ||
+        lintInsere(prcsmng->estadoPronto, *lintAcessa(prcsmng->estadoBloqueado, 0)) == false ||
+        lintRemove(prcsmng->estadoBloqueado, 0) == false)
     {
       printf("FALHA EM EXECUCAO: Erro ao manusear listas\n");
       return PRCSMNG_FALHA_EXECUCAO;
@@ -387,7 +385,7 @@ int prcsmngExecuta(ProcessoManager *prcsmng, char argumento)
   }
   else if (argumento == 'P')
   {
-    if(prcsmngNovoReporter(prcsmng) == false)
+    if (prcsmngNovoReporter(prcsmng) == false)
     {
       printf("FALHA EM EXECUCAO: Erro no manuseio de processos para a criacao do Reporter\n");
       return PRCSMNG_FALHA_EXECUCAO;
@@ -396,7 +394,7 @@ int prcsmngExecuta(ProcessoManager *prcsmng, char argumento)
   }
   else if (argumento == 'T')
   {
-    if(prcsmngNovoReporter(prcsmng) == false)
+    if (prcsmngNovoReporter(prcsmng) == false)
     {
       printf("FALHA EM EXECUCAO: Erro no manuseio de processos para a criacao do Reporter\n");
       return PRCSMNG_FALHA_EXECUCAO;
@@ -409,35 +407,35 @@ int prcsmngExecuta(ProcessoManager *prcsmng, char argumento)
 
 bool prcsmngNovoProcesso(ProcessoManager *prcsmng, int pulosNoPai)
 {
-  CPU* cpu              = prcsmng->CPU;
-  EntradaPCB* entradaA  = pcbAcessa(prcsmng->tabelaPCB, prcsmng->estadoExecutando);
-  if(entradaA == NULL)
+  CPU *cpu = prcsmng->CPU;
+  EntradaPCB *entradaA = pcbAcessa(prcsmng->tabelaPCB, prcsmng->estadoExecutando);
+  if (entradaA == NULL)
     return false;
-  char* comandos = malloc(strlen(cpu->processo->comandos) + 1);
-  if(comandos == NULL)
+  char *comandos = malloc(strlen(cpu->processo->comandos) + 1);
+  if (comandos == NULL)
     return false;
   strcpy(comandos, cpu->processo->comandos);
-  Processo* processoN = prcsInit(comandos);
-  if(processoN == NULL)
+  Processo *processoN = prcsInit(comandos);
+  if (processoN == NULL)
   {
     free(comandos);
     return false;
   }
-  processoN->valor      = cpu->processo->valor;
-  EntradaPCB* entradaN  = malloc(sizeof(EntradaPCB));
-  if(entradaN == NULL)
+  processoN->valor = cpu->processo->valor;
+  EntradaPCB *entradaN = malloc(sizeof(EntradaPCB));
+  if (entradaN == NULL)
   {
     prcsDesaloca(processoN);
     return false;
   }
-  entradaN->contadorPrograma          = cpu->contadorProgramaAtual + 1;
-  entradaN->paiID                     = entradaA->processoID;
-  entradaN->prioridade                = entradaA->prioridade;
-  entradaN->processo                  = processoN;
-  entradaN->processoID                = prcsmng->proximoId;
-  entradaN->tempoExecucao             = 0;
-  entradaN->usoCPU                    = 0;
-  prcsmng->proximoId                  += 1;
+  entradaN->contadorPrograma = cpu->contadorProgramaAtual + 1;
+  entradaN->paiID = entradaA->processoID;
+  entradaN->prioridade = entradaA->prioridade;
+  entradaN->processo = processoN;
+  entradaN->processoID = prcsmng->proximoId;
+  entradaN->tempoExecucao = 0;
+  entradaN->usoCPU = 0;
+  prcsmng->proximoId += 1;
   prcsmng->CPU->contadorProgramaAtual += pulosNoPai + 1;
   if (pcbInsere(prcsmng->tabelaPCB, entradaN) == false)
   {
@@ -467,7 +465,7 @@ static void codigoReporter(ProcessoManager *prcsmng)
   printf("Fila de processos bloqueados: [%ld] Processos no total\n", prcsmng->estadoBloqueado->quantidade);
   for (size_t i = 0; i < prcsmng->estadoBloqueado->quantidade; i += 1)
   {
-    size_t* indice = lintAcessa(prcsmng->estadoBloqueado, i);
+    size_t *indice = lintAcessa(prcsmng->estadoBloqueado, i);
     if (indice == NULL)
       break;
     printf(

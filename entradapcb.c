@@ -3,45 +3,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-EntradaPCB* epcbInit(Processo* processo, unsigned int processoID, unsigned int paiID)
+EntradaPCB *epcbInit(Processo *processo, unsigned int processoID, unsigned int paiID)
 {
-  if(processo == NULL)
+  if (processo == NULL)
     return NULL;
-  EntradaPCB* retorno = malloc(sizeof(EntradaPCB));
-  if(retorno == NULL)
+  EntradaPCB *retorno = malloc(sizeof(EntradaPCB));
+  if (retorno == NULL)
     return NULL;
-  retorno->processo         = processo;
-  retorno->processoID       = processoID;
-  retorno->paiID            = paiID;
-  retorno->prioridade       = 1;
+  retorno->processo = processo;
+  retorno->processoID = processoID;
+  retorno->paiID = paiID;
+  retorno->prioridade = 1;
   retorno->contadorPrograma = 0;
-  retorno->tempoExecucao    = 0;
-  retorno->usoCPU           = 0;
+  retorno->tempoExecucao = 0;
+  retorno->usoCPU = 0;
   return retorno;
 }
 
-EntradaPCB* epcbCriaFilho(EntradaPCB* objeto, int idFilho)
+EntradaPCB *epcbCriaFilho(EntradaPCB *objeto, int idFilho)
 {
-  if(objeto == NULL)
+  if (objeto == NULL)
     return NULL;
-  EntradaPCB* retorno = malloc(sizeof(EntradaPCB));
-  if(retorno == NULL)
+  EntradaPCB *retorno = malloc(sizeof(EntradaPCB));
+  if (retorno == NULL)
     return NULL;
-  retorno->contadorPrograma   = objeto->contadorPrograma;
-  retorno->paiID              = objeto->processoID;
-  retorno->prioridade         = objeto->prioridade;
-  retorno->processoID         = idFilho;
-  retorno->tempoExecucao      = 0;
-  retorno->usoCPU             = 0;
-  retorno->processo           = malloc(sizeof(Processo));
-  if(retorno->processo == NULL)
+  retorno->contadorPrograma = objeto->contadorPrograma;
+  retorno->paiID = objeto->processoID;
+  retorno->prioridade = objeto->prioridade;
+  retorno->processoID = idFilho;
+  retorno->tempoExecucao = 0;
+  retorno->usoCPU = 0;
+  retorno->processo = malloc(sizeof(Processo));
+  if (retorno->processo == NULL)
   {
     free(retorno);
     return NULL;
   }
-  retorno->processo->valor    = objeto->processo->valor;
+  retorno->processo->valor = objeto->processo->valor;
   retorno->processo->comandos = malloc(strlen(objeto->processo->comandos) + 1);
-  if(retorno->processo->comandos == NULL)
+  if (retorno->processo->comandos == NULL)
   {
     free(retorno->processo);
     free(retorno);
@@ -51,20 +51,20 @@ EntradaPCB* epcbCriaFilho(EntradaPCB* objeto, int idFilho)
   return retorno;
 }
 
-void epbcDesaloca(EntradaPCB* objeto)
+void epbcDesaloca(EntradaPCB *objeto)
 {
-  if(objeto == NULL)
+  if (objeto == NULL)
     return;
   prcsDesaloca(objeto->processo);
   free(objeto);
 }
 
-bool epcbTrocaImagem(EntradaPCB* objeto, char* novaImagem_tomaPosse)
+bool epcbTrocaImagem(EntradaPCB *objeto, char *novaImagem_tomaPosse)
 {
-  if(objeto == NULL || novaImagem_tomaPosse == NULL)
+  if (objeto == NULL || novaImagem_tomaPosse == NULL)
     return false;
   free(objeto->processo->comandos);
   objeto->processo->comandos = novaImagem_tomaPosse;
   objeto->contadorPrograma = 0;
-  return true;  
+  return true;
 }

@@ -5,15 +5,15 @@
 
 typedef struct
 {
-  int   valor;
-  char* comandos;
+  int valor;
+  char *comandos;
 } Processo;
 
-Processo* prcsInit(char* argumentos_tomaPosse);
-char* prcsLer(Processo* objeto, size_t indiceComando);
-void prcsDesaloca(Processo* objeto);
+Processo *prcsInit(char *argumentos_tomaPosse);
+char *prcsLer(Processo *objeto, size_t indiceComando);
+void prcsDesaloca(Processo *objeto);
 
-#endif //PROCESSO_H
+#endif // PROCESSO_H
 
 /*
 Possui os seguintes dados:
