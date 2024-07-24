@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static size_t inicioLinha(const char* texto, size_t numeroLinha) //retorna o char depois do \n da linha anterior
+static size_t inicioLinha(const char* texto, size_t numeroLinha)
 {
   size_t retorno = 0;
   size_t linhaAtual = 0;
@@ -16,7 +16,7 @@ static size_t inicioLinha(const char* texto, size_t numeroLinha) //retorna o cha
   return -1;  
 }
 
-static size_t finalLinha(const char* texto, size_t numeroLinha) //retorna o /n ou /0 que termina a linha
+static size_t finalLinha(const char* texto, size_t numeroLinha)
 {
   size_t retorno = inicioLinha(texto, numeroLinha);
   if(retorno == -1)

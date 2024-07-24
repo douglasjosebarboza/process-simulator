@@ -11,10 +11,10 @@ typedef struct
   size_t  quantidade;
 } ListaInt;
 
-ListaInt* lintInit();                               //Pode gerar erro de SO
+ListaInt* lintInit();
 bool lintInsere(ListaInt* lista, size_t valor);
 bool lintRemove(ListaInt* lista, size_t indice);
-size_t* lintAcessa(ListaInt* lista, size_t indice); //Pode retornar nulo
+size_t* lintAcessa(ListaInt* lista, size_t indice);
 void lintDesaloca(ListaInt* lista);
 
 #endif //LISTAINT_H

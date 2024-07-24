@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-EntradaPCB* epcbInit(Processo* processo, unsigned int processoID, unsigned int paiID, unsigned char prioridade)
+EntradaPCB* epcbInit(Processo* processo, unsigned int processoID, unsigned int paiID)
 {
   if(processo == NULL)
     return NULL;
@@ -13,7 +13,7 @@ EntradaPCB* epcbInit(Processo* processo, unsigned int processoID, unsigned int p
   retorno->processo         = processo;
   retorno->processoID       = processoID;
   retorno->paiID            = paiID;
-  retorno->prioridade       = prioridade;
+  retorno->prioridade       = 1;
   retorno->contadorPrograma = 0;
   retorno->tempoExecucao    = 0;
   retorno->usoCPU           = 0;

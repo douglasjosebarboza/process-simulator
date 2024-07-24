@@ -19,10 +19,10 @@ typedef struct {
   ListaInt*   estadoBloqueado;
 } ProcessoManager;
  
-ProcessoManager* prcsmngInit(); //Pode gerar erro de SO
+ProcessoManager* prcsmngInit();
 bool prcsmngNovoProcesso(ProcessoManager* prcsmng, int pulosNoPai);
 bool prcsmngNovoReporter(ProcessoManager* prcsmng);
-bool prcsmngTrocaContexto(ProcessoManager* prcsmng, bool saidaPronta);
+bool prcsmngTrocaContexto(ProcessoManager* prcsmng);
 int prcsmngExecuta(ProcessoManager* prcsmng, char argumento);
 void prcsmngDesaloca(ProcessoManager* prcsmng);
 

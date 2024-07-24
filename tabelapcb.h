@@ -10,10 +10,10 @@ typedef struct {
     size_t quantidade;
 } TabelaPCB;
 
-TabelaPCB* pcbInit();                                             //Pode gerar erro de SO
+TabelaPCB* pcbInit(); 
 bool pcbInsere(TabelaPCB* tabela, EntradaPCB* entrada_tomaPosse);
-bool pcbRemove(TabelaPCB* tabela, size_t indice);                 //Remove a entrada da lista e desaloca ela.
-EntradaPCB* pcbAcessa(TabelaPCB* tabela, size_t indice);          //Acessa a lista internamente
+bool pcbRemove(TabelaPCB* tabela, size_t indice);
+EntradaPCB* pcbAcessa(TabelaPCB* tabela, size_t indice);
 void pcbDesaloca(TabelaPCB* tabela);
 
 #endif //TABELAPCB_H

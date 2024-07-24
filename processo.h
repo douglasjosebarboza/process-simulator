@@ -9,8 +9,8 @@ typedef struct
   char* comandos;
 } Processo;
 
-Processo* prcsInit(char* argumentos_tomaPosse);         //Pode gerar erro por SO
-char* prcsLer(Processo* objeto, size_t indiceComando);  //Pode retornar nulo, string alocada com comando ou dar erro de SO
+Processo* prcsInit(char* argumentos_tomaPosse);
+char* prcsLer(Processo* objeto, size_t indiceComando);
 void prcsDesaloca(Processo* objeto);
 
 #endif //PROCESSO_H

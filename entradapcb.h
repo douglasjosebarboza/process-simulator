@@ -15,8 +15,8 @@ typedef struct
   size_t        contadorPrograma;
 } EntradaPCB;
 
-EntradaPCB* epcbInit(Processo* processo_tomaPosse, unsigned int processoID, unsigned int paiID, unsigned char prioridade);  //Pode gerar erros de SO
-EntradaPCB* epcbCriaFilho(EntradaPCB* objeto, int idFilho);                                                                 //Pode gerar erros de SO
+EntradaPCB* epcbInit(Processo* processo_tomaPosse, unsigned int processoID, unsigned int paiID);
+EntradaPCB* epcbCriaFilho(EntradaPCB* objeto, int idFilho);                                                                 
 void epbcDesaloca(EntradaPCB* objeto);
 bool epcbTrocaImagem(EntradaPCB* objeto, char* novaImagem_tomaPosse);
 

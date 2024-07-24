@@ -131,7 +131,7 @@ ProcessoManager *prcsmngInit()
     free(stringInit);
     return NULL;
   }
-  EntradaPCB* entrada0 = epcbInit(processo0, 0, 0, 1);
+  EntradaPCB* entrada0 = epcbInit(processo0, 0, 0);
   if(entrada0 == NULL)
   {
     printf("FALHA EM EXECUCAO: Erro ao alocar a memoria para o gerenciador de processos\n");
@@ -163,7 +163,7 @@ static size_t prcsmngEscalonador(ProcessoManager* objeto)
   return ((size_t)rand()) % objeto->estadoPronto->quantidade;
 }
 
-bool prcsmngTrocaContexto(ProcessoManager* objeto, bool saidaPronta)
+bool prcsmngTrocaContexto(ProcessoManager* objeto)
 {
   if (objeto->estadoPronto->quantidade == 0)
     return false;
@@ -173,15 +173,8 @@ bool prcsmngTrocaContexto(ProcessoManager* objeto, bool saidaPronta)
     return false;
   executandoAntigo->contadorPrograma  = cpu->contadorProgramaAtual;
   executandoAntigo->usoCPU            += objeto->tempo - cpu->tempoEntrada;
-  if (saidaPronta)
-  {
-    if(lintInsere(objeto->estadoPronto, objeto->estadoExecutando) == false)
-      return false;
-  } else
-  {
-    if(lintInsere(objeto->estadoBloqueado, objeto->estadoExecutando) == false)
-      return false;
-  }
+  if(lintInsere(objeto->estadoBloqueado, objeto->estadoExecutando) == false)
+    return false;
   size_t indiceNoEstadoPronto = prcsmngEscalonador(objeto);
   if(lintAcessa(objeto->estadoPronto, indiceNoEstadoPronto) == NULL)
     return false;
@@ -246,7 +239,7 @@ static int processaD(ProcessoManager *objeto, char *argumentos)
 static int processaB(ProcessoManager *objeto, char *argumentos)
 {
   objeto->CPU->contadorProgramaAtual += 1;
-  if (prcsmngTrocaContexto(objeto, false))
+  if (prcsmngTrocaContexto(objeto))
     return PRCSMNG_SUCESSO_EXECUCAO;
   printf("FALHA EM EXECUCAO: Troca de contexto falhou\n");
   return PRCSMNG_FALHA_EXECUCAO;
@@ -501,7 +494,6 @@ static void codigoReporter(ProcessoManager *prcsmng)
   }
   printf("********************\n");
   exit(EXIT_SUCCESS);
-  // Esse processo nasce e morre, portanto, não é necessário fazer sua limpeza de memória
 }
 
 bool prcsmngNovoReporter(ProcessoManager *prcsmng)
